@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 
-import clientsRoutes from "./routes/clients.js";
-import ordersRoutes from "./routes/orders.js";
-import installmentsRoutes from "./routes/installments.js";
+import clientsRoutes from "./routes/clients.routes.js";
+import ordersRoutes from "./routes/orders.routes.js";
+import installmentsRoutes from "./routes/installments.routes.js";
 
 dotenv.config();
 
