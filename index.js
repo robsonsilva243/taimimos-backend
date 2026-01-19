@@ -12,7 +12,7 @@ const app = express();
 
 // 🔹 MIDDLEWARES
 app.use(cors({
-  origin: "*", // Render não bloqueia o frontend
+  origin: "*",
 }));
 app.use(express.json());
 
