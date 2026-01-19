@@ -179,12 +179,7 @@ DATABASE_URL = (sua URL do Railway)
 ---
 
 ## 👩‍🍳 Desenvolvido para:
-**TaiMimos — Confeitaria Artesanal**
+**TaiMimos Personalidados**
 
 ---
 
-## 📌 Próximos Passos (Opcional)
-- Autenticação (login)
-- Perfis de usuário (admin/funcionário)
-- Relatórios em PDF
-- Exportação de dados para Excel
