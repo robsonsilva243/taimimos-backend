@@ -7,46 +7,40 @@ datasource db {
 }
 
 model Client {
-  id       Int     @id @default(autoincrement())
-  nome     String
-  telefone String?
-  email    String?
-
-  orders       Order[]
-  installments Installment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int           @id @default(autoincrement())
+  nome        String
+  telefone    String?
+  email       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime
+  Installment Installment[]
+  orders      Order[]
 }
 
 model Order {
-  id          Int     @id @default(autoincrement())
-  clientId    Int
-  descricao   String?
-  valor       Float
-  parcelas    Int
-  dataEntrega String?
-  status      String  @default("Pendente")
-
-  client       Client        @relation(fields: [clientId], references: [id])
+  id           Int           @id @default(autoincrement())
+  descricao    String?
+  valor        Float
+  parcelas     Int
+  status       String        @default("Pendente")
+  dataEntrega  String?
+  clientId     Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime
   installments Installment[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  client       Client        @relation(fields: [clientId], references: [id])
 }
 
 model Installment {
-  id            Int    @id @default(autoincrement())
-  orderId       Int
-  clientId      Int
+  id            Int      @id @default(autoincrement())
   numero        Int
   totalParcelas Int
   valor         Float
   vencimento    String
-  status        String @default("Pendente")
-
-  order  Order  @relation(fields: [orderId], references: [id])
-  client Client @relation(fields: [clientId], references: [id])
-
-  createdAt DateTime @default(now())
+  status        String   @default("Pendente")
+  orderId       Int
+  clientId      Int
+  createdAt     DateTime @default(now())
+  Client        Client   @relation(fields: [clientId], references: [id])
+  order         Order    @relation(fields: [orderId], references: [id])
 }

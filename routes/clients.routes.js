@@ -1,48 +1,83 @@
-import { Router } from "express";
+import express from "express";
+import { PrismaClient } from "@prisma/client";
 
-const router = Router();
+const prisma = new PrismaClient();
+const router = express.Router();
 
-let clients = [];
-let clientId = 1;
-
-// CREATE
-router.post("/", (req, res) => {
-  const { nome, telefone, email } = req.body;
-
-  const newClient = {
-    id: clientId++,
-    nome,
-    telefone,
-    email,
-  };
-
-  clients.push(newClient);
-  res.status(201).json(newClient);
-});
-
-// READ
-router.get("/", (req, res) => {
-  res.json(clients);
-});
-
-// UPDATE
-router.put("/:id", (req, res) => {
-  const id = Number(req.params.id);
-  const index = clients.findIndex((c) => c.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({ message: "Cliente não encontrado" });
+/**
+ * CREATE CLIENT
+ */
+router.post("/", async (req, res) => {
+  try {
+    const client = await prisma.client.create({
+      data: req.body,
+    });
+    res.status(201).json(client);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  clients[index] = { id, ...req.body };
-  res.json(clients[index]);
 });
 
-// DELETE
-router.delete("/:id", (req, res) => {
-  const id = Number(req.params.id);
-  clients = clients.filter((c) => c.id !== id);
-  res.status(204).send();
+/**
+ * LIST ALL CLIENTS
+ */
+router.get("/", async (req, res) => {
+  try {
+    const clients = await prisma.client.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    res.json(clients);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * GET CLIENT BY ID
+ */
+router.get("/:id", async (req, res) => {
+  try {
+    const client = await prisma.client.findUnique({
+      where: { id: Number(req.params.id) },
+    });
+
+    if (!client) {
+      return res.status(404).json({ error: "Cliente não encontrado" });
+    }
+
+    res.json(client);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * UPDATE CLIENT
+ */
+router.put("/:id", async (req, res) => {
+  try {
+    const client = await prisma.client.update({
+      where: { id: Number(req.params.id) },
+      data: req.body,
+    });
+    res.json(client);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+/**
+ * DELETE CLIENT
+ */
+router.delete("/:id", async (req, res) => {
+  try {
+    await prisma.client.delete({
+      where: { id: Number(req.params.id) },
+    });
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;
